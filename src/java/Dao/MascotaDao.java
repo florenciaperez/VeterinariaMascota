@@ -14,6 +14,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import utilitarios.HibernateUtil;
 
+
 /**
  *
  * @author Lenovo
@@ -27,8 +28,7 @@ public class MascotaDao implements IMascota {
         Session sesion = HibernateUtil.getSessionFactory().openSession();
         Transaction transaccion = sesion.beginTransaction();
         //registrar en la base de datos de la mascota
-        
-        
+       
         try {
             sesion.save(mascota);
             transaccion.commit();
@@ -42,24 +42,32 @@ public class MascotaDao implements IMascota {
     }
 
     @Override
-    public ArrayList<Mascota> listarMascotas(Session sesion) {
+    public ArrayList<Mascota> listarMascotas() {
+         Session sesion = HibernateUtil.getSessionFactory().openSession();
         ArrayList<Mascota> milista = new ArrayList<>();
 
         //crear la consulta hacia la base de datos
         Query query = sesion.createQuery("FROM Mascota");
 
+       
+        
         //ejecutar la consulta y obtener la lista
         milista = (ArrayList<Mascota>) query.list();
         return milista;
     }
 
     @Override
-    public void ActualizarMascota(Mascota mascota) {
+    public boolean ActualizarMascota(Mascota mascota) {
         Session sesion = HibernateUtil.getSessionFactory().openSession();
         Transaction transaccion = sesion.beginTransaction();
-        sesion.update(mascota);
-        transaccion.commit();
+        boolean respuesta = true;
+        try {
+            sesion.update(mascota);
+            transaccion.commit();
+        } catch (Exception e) {
+        }
         sesion.close();
+        return respuesta;
     }
 
     @Override
@@ -86,5 +94,22 @@ public class MascotaDao implements IMascota {
         Long FilasTab=(Long) query.uniqueResult();
         Integer cont=FilasTab.intValue();
         return cont;
+    }
+
+    @Override
+    public boolean eliminar(Mascota mascota) {
+        boolean respuesta=true;
+        Session sesion = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaccion = sesion.beginTransaction();
+                
+        try {
+            sesion.delete(mascota);
+            transaccion.commit();
+        } catch (Exception e) {
+            respuesta=false;
+        }
+    
+        sesion.close();
+        return respuesta;
     }
 }

@@ -23,6 +23,10 @@ static{
 public static SessionFactory getSessionFactory(){
     return sessionFactory;
 }    
+
+    public static Object getSessionFractory() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
 
